@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>No signal | mode·switch</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="My latest side project involves bringing wifi mesh network support to Firefox OS. This is the first of several articles on the subject, and in this part I’ll cover the current state of device connecti">
+<meta property="og:type" content="article">
+<meta property="og:title" content="No signal">
+<meta property="og:url" content="http://blog.modeswitch.org/2014/09/22/No-signal/">
+<meta property="og:site_name" content="mode·switch">
+<meta property="og:description" content="My latest side project involves bringing wifi mesh network support to Firefox OS. This is the first of several articles on the subject, and in this part I’ll cover the current state of device connecti">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="No signal">
+<meta name="twitter:description" content="My latest side project involves bringing wifi mesh network support to Firefox OS. This is the first of several articles on the subject, and in this part I’ll cover the current state of device connecti">
+<meta name="twitter:creator" content="@https://twitter.com/modeswitch">
+
+  
+    <link rel="alternative" href="/atom.xml" title="mode·switch" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">mode·switch</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">standard output</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        <a id="nav-github-link" class="nav-icon" href="https://github.com/modeswitch" target="_blank"></a>
+        <a id="nav-twitter-link" class="nav-icon" href="https://twitter.com/modeswitch" target="_blank"></a>
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><input type="submit" value="&#xF002;" class="search-form-submit"><input type="hidden" name="q" value="site:http://blog.modeswitch.org"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-No-signal" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2014/09/22/No-signal/" class="article-date">
+  <time datetime="2014-09-22T04:00:00.000Z" itemprop="datePublished">22 Sep 2014</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Technology/">Technology</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      No signal
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>My latest side project involves bringing wifi mesh network support to Firefox OS. This is the first of several articles on the subject, and in this part I’ll cover the current state of device connectivity, the limitations of those approaches, and how adhoc mesh networking provides a way around those limitations.</p>
+<a id="more"></a>
+
+<p>Connectivity is rarely a problem if you have access to a cellular network. But what happens when you have no signal?</p>
+<h2 id="Where_we_are_today">Where we are today</h2>
+<p>Imagine you’re waiting for the subway. When it arrives and you get on, three of your friends are there playing a multiplayer game on their phones. They invite you to join them. One of them is running a Wi-Fi hotspot, so she gives you the password and you connect. After a few stops she has to leave. Because her phone is the Wi-Fi hotspot through which the other three phones are connected, when she leaves the network will dissolve and the game will end. One of the remaining players will have to set up a new Wi-Fi hotspot before they can continue playing.</p>
+<p>Now imagine your country is in the midst of a political revolution. The government has shut down the connection to the public internet and is monitoring phone and data traffic on cellular networks. (This may sound contrived, but it actually <a href="http://en.wikipedia.org/wiki/Internet_censorship_in_the_Arab_Spring" target="_blank" rel="external">happens</a>.) There are some open Wi-Fi access points at cafes and in people’s homes, but they no longer provide internet access. It’s possible to connect to other devices on these open Wi-Fi LANs but communication across LANs is not possible and there’s no coverage outside. Some people are running mobile Wi-Fi hotspots on their phones, but each hotspot can only support a few connected devices and users can’t communicate with each other if they’re on different hotspots.</p>
+<p>There are several interesting problems encountered in the scenarios above:</p>
+<ul>
+<li>Centrally-controlled networks are not robust against government censorship or surveillance</li>
+<li>Cellular and Wi-Fi rely heavily on fixed infrastructure (access points or cell towers)</li>
+<li>Mobile Wi-Fi hotspots don’t scale</li>
+</ul>
+<h2 id="Ad-hoc_Wi-Fi_mesh_networking">Ad-hoc Wi-Fi mesh networking</h2>
+<p>You’re probably aware or Wi-Fi <strong>STATION</strong> mode, where your device connects to an existing access point (in some cases prompting you for a password), and <strong>AP</strong> (hotspot) mode that allows other devices to connect to yours and share your internet connection, if you have one. There’s a third, <strong>ADHOC</strong> mode that allows devices to connect peer-to-peer with other devices the share the same network ID. Devices in ad-hoc mode will scan for other devices that it can connect to, so nearby devices will become visible and connect even as your location changes. That’s a big advantage over Wi-Fi hotspots.</p>
+<p>Scaling is still an issue for ad-hoc networks. Normally, your device can only talk to other devices that it can see directly. By allowing each device to route data for other devices it can see, they can send messages to more devices (over multiple routing hops) than they would over the ad-hoc network alone. This is exactly the problem that mesh networking solves. Moreover, this is all we need to solve the problems from the scenarios above:</p>
+<ul>
+<li><p>Centrally-controlled networks are not robust against government censorship or surveillance</p>
+<p>  Mesh networks are entirely distributed and cannot be shut down by a single entity. Connections to other nodes in the mesh aren’t routed over the public internet, so mass surveillance is more difficult.</p>
+</li>
+<li><p>Cellular and Wi-Fi rely heavily on fixed infrastructure (access points or cell towers)</p>
+<p>  Although mesh networks can benefit from having some fixed nodes, the network doesn’t rely on any fixed infrastructure. A mesh network can form from a group of mobile devices alone.</p>
+</li>
+<li><p>Mobile Wi-Fi hotspots don’t scale</p>
+<p>  Mesh routing protocols allow mesh networks to scale beyond the limitations of mobile Wi-Fi hardware. More devices can join the network by routing packets through intermediate nodes.</p>
+</li>
+</ul>
+<h3 id="Public_mesh_networks">Public mesh networks</h3>
+<p>Having many small mesh networks doesn’t make much sense because it has the same limitations as segregated Wi-Fi networks. Things get more interesting when we consider a public mobile mesh network such that devices can connect with other nearby devices and route traffic in the mesh, or out to the public internet through internet-enabled mesh nodes. The key here is that your device may route traffic for users you don’t know, and that they will do the same for you. There are opportunities to leverage other emerging technologies as well; Using cryptocurrency microtransactions to pay mesh peers to route data over a certain size, for example.</p>
+<h3 id="Future_work">Future work</h3>
+<p>Mesh networking isn’t a perfect solution. Features like service discovery and user presence pose additional problems in a mesh network. Mesh networking protocols can have a big impact on battery life for mobile devices. And <strong>ADHOC</strong> mode is not always well supported by mobile device manufacturers. While these problems are solvable, they will need some careful engineering.</p>
+<p>I’ve started doing some of this work for Firefox OS. So far I have ad-hoc mode working on several supported devices including the <a href="https://developer.mozilla.org/en-US/Firefox_OS/Developer_phone_guide/Flame" target="_blank" rel="external">Flame</a>, which is the current developer reference phone. I’ll dive into the technical details in my next post.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.modeswitch.org/2014/09/22/No-signal/" data-id="s0iz3czwpi38tbpi" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Mesh-Networking/">Mesh Networking</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Technology/">Technology</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mesh-Networking/">Mesh Networking</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09">September 2014</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2014/09/22/No-signal/">No signal</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2014 ALAN K<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>
